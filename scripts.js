@@ -40,22 +40,73 @@ const initData = {
 };
 
 const ORIGIN = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-const pridictable = {};
 
 const popValue = (arr = [], val) => arr.filter((el) => el !== val);
 
-const initPossibilities = () => {
-  const pridictable = {};
+const getPossibilities = (currentData, cellRow, cellCol) => {
+  let currentPossible = [...ORIGIN];
+
+  ORIGIN.map((num) => {
+    const itemCoordinateInRow = `${cellRow}-${num}`;
+    const itemCoordinateInColumn = `${num}-${cellCol}`;
+    if (!isNaN(currentData[itemCoordinateInRow])) {
+      currentPossible = popValue(
+        currentPossible,
+        currentData[itemCoordinateInRow]
+      );
+    }
+    if (!isNaN(currentData[itemCoordinateInColumn])) {
+      currentPossible = popValue(
+        currentPossible,
+        currentData[itemCoordinateInColumn]
+      );
+    }
+  });
+  return currentPossible;
+};
+
+const fillDomNode = (currentData) => {
+  const filledData = { ...currentData };
+  const keys = Object.keys(currentData);
+  keys.map((coordinate) => {
+    if (
+      !Number.isInteger(filledData[coordinate]) &&
+      filledData[coordinate].length === 1
+    ) {
+      const num = filledData[coordinate][0];
+      const selector = `.dom-${coordinate}`;
+      document.querySelector(selector).innerText = num;
+      filledData[coordinate] = num;
+    }
+  });
+  return filledData;
+};
+
+const track = (currentData) => {
+  console.log("Tracking ...");
+  let emptyCellCount = 0;
+  let tempData = { ...currentData };
+
   ORIGIN.map((row) => {
     ORIGIN.map((col) => {
       const coordinate = `${row}-${col}`;
-      if (!initData[coordinate]) {
-        // Empty box.
-        pridictable[coordinate] = [...ORIGIN];
+      if (!Number.isInteger(tempData[coordinate])) {
+        emptyCellCount += 1;
+        tempData[coordinate] = getPossibilities(tempData, row, col);
       }
     });
   });
-  return pridictable;
+
+  console.log("before fill data: ", tempData);
+
+  tempData = fillDomNode(tempData);
+
+  console.log("after fill data: ", tempData);
+
+  return {
+    emptyCellCount,
+    data: tempData,
+  };
 };
 
 const init = () => {
@@ -70,7 +121,17 @@ const init = () => {
 };
 
 const solve = () => {
+  console.time("Time Solve");
   console.log("Solving problem ...");
+  let currentData = { ...initData };
+  let count = 0;
+  do {
+    const { emptyCellCount, data } = track(currentData);
+    count = emptyCellCount;
+    currentData = data;
+  } while (count != 0);
+  console.log("Case closed!");
+  console.timeEnd("Time Solve");
 };
 
 const main = () => {
