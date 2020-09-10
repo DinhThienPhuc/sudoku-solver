@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
 
-    <title>The HTML5 Herald</title>
+    <title>Sudoku Solver</title>
     <meta name="description" content="The HTML5 Herald" />
     <meta name="author" content="SitePoint" />
 
@@ -12,6 +12,114 @@
   </head>
 
   <body>
+    <div class="container">
+      <div class="battle">
+        <div class="row row-1">
+          <div class="dom-1-1 dom-box col-1 box"></div>
+          <div class="dom-1-2 dom-box col-2 box"></div>
+          <div class="dom-1-3 dom-box col-3 box"></div>
+          <div class="dom-1-4 dom-box col-4 box"></div>
+          <div class="dom-1-5 dom-box col-5 box"></div>
+          <div class="dom-1-6 dom-box col-6 box"></div>
+          <div class="dom-1-7 dom-box col-7 box"></div>
+          <div class="dom-1-8 dom-box col-8 box"></div>
+          <div class="dom-1-9 dom-box col-9 box"></div>
+        </div>
+        <div class="row row-2">
+          <div class="dom-2-1 dom-box col-1 box"></div>
+          <div class="dom-2-2 dom-box col-2 box"></div>
+          <div class="dom-2-3 dom-box col-3 box"></div>
+          <div class="dom-2-4 dom-box col-4 box"></div>
+          <div class="dom-2-5 dom-box col-5 box"></div>
+          <div class="dom-2-6 dom-box col-6 box"></div>
+          <div class="dom-2-7 dom-box col-7 box"></div>
+          <div class="dom-2-8 dom-box col-8 box"></div>
+          <div class="dom-2-9 dom-box col-9 box"></div>
+        </div>
+        <div class="row row-3">
+          <div class="dom-3-1 dom-box col-1 box"></div>
+          <div class="dom-3-2 dom-box col-2 box"></div>
+          <div class="dom-3-3 dom-box col-3 box"></div>
+          <div class="dom-3-4 dom-box col-4 box"></div>
+          <div class="dom-3-5 dom-box col-5 box"></div>
+          <div class="dom-3-6 dom-box col-6 box"></div>
+          <div class="dom-3-7 dom-box col-7 box"></div>
+          <div class="dom-3-8 dom-box col-8 box"></div>
+          <div class="dom-3-9 dom-box col-9 box"></div>
+        </div>
+        <div class="row row-4">
+          <div class="dom-4-1 dom-box col-1 box"></div>
+          <div class="dom-4-2 dom-box col-2 box"></div>
+          <div class="dom-4-3 dom-box col-3 box"></div>
+          <div class="dom-4-4 dom-box col-4 box"></div>
+          <div class="dom-4-5 dom-box col-5 box"></div>
+          <div class="dom-4-6 dom-box col-6 box"></div>
+          <div class="dom-4-7 dom-box col-7 box"></div>
+          <div class="dom-4-8 dom-box col-8 box"></div>
+          <div class="dom-4-9 dom-box col-9 box"></div>
+        </div>
+        <div class="row row-5">
+          <div class="dom-5-1 dom-box col-1 box"></div>
+          <div class="dom-5-2 dom-box col-2 box"></div>
+          <div class="dom-5-3 dom-box col-3 box"></div>
+          <div class="dom-5-4 dom-box col-4 box"></div>
+          <div class="dom-5-5 dom-box col-5 box"></div>
+          <div class="dom-5-6 dom-box col-6 box"></div>
+          <div class="dom-5-7 dom-box col-7 box"></div>
+          <div class="dom-5-8 dom-box col-8 box"></div>
+          <div class="dom-5-9 dom-box col-9 box"></div>
+        </div>
+        <div class="row row-6">
+          <div class="dom-6-1 dom-box col-1 box"></div>
+          <div class="dom-6-2 dom-box col-2 box"></div>
+          <div class="dom-6-3 dom-box col-3 box"></div>
+          <div class="dom-6-4 dom-box col-4 box"></div>
+          <div class="dom-6-5 dom-box col-5 box"></div>
+          <div class="dom-6-6 dom-box col-6 box"></div>
+          <div class="dom-6-7 dom-box col-7 box"></div>
+          <div class="dom-6-8 dom-box col-8 box"></div>
+          <div class="dom-6-9 dom-box col-9 box"></div>
+        </div>
+        <div class="row row-7">
+          <div class="dom-7-1 dom-box col-1 box"></div>
+          <div class="dom-7-2 dom-box col-2 box"></div>
+          <div class="dom-7-3 dom-box col-3 box"></div>
+          <div class="dom-7-4 dom-box col-4 box"></div>
+          <div class="dom-7-5 dom-box col-5 box"></div>
+          <div class="dom-7-6 dom-box col-6 box"></div>
+          <div class="dom-7-7 dom-box col-7 box"></div>
+          <div class="dom-7-8 dom-box col-8 box"></div>
+          <div class="dom-7-9 dom-box col-9 box"></div>
+        </div>
+        <div class="row row-8">
+          <div class="dom-8-1 dom-box col-1 box"></div>
+          <div class="dom-8-2 dom-box col-2 box"></div>
+          <div class="dom-8-3 dom-box col-3 box"></div>
+          <div class="dom-8-4 dom-box col-4 box"></div>
+          <div class="dom-8-5 dom-box col-5 box"></div>
+          <div class="dom-8-6 dom-box col-6 box"></div>
+          <div class="dom-8-7 dom-box col-7 box"></div>
+          <div class="dom-8-8 dom-box col-8 box"></div>
+          <div class="dom-8-9 dom-box col-9 box"></div>
+        </div>
+        <div class="row row-9">
+          <div class="dom-9-1 dom-box col-1 box"></div>
+          <div class="dom-9-2 dom-box col-2 box"></div>
+          <div class="dom-9-3 dom-box col-3 box"></div>
+          <div class="dom-9-4 dom-box col-4 box"></div>
+          <div class="dom-9-5 dom-box col-5 box"></div>
+          <div class="dom-9-6 dom-box col-6 box"></div>
+          <div class="dom-9-7 dom-box col-7 box"></div>
+          <div class="dom-9-8 dom-box col-8 box"></div>
+          <div class="dom-9-9 dom-box col-9 box"></div>
+        </div>
+      </div>
+      <div>
+        <button class="dom-btn-init btn btn-init">Init set</button>
+        <button class="dom-btn-solve btn btn-solve">Solve</button>
+      </div>
+    </div>
+
     <script src="scripts.js"></script>
   </body>
 </html>
