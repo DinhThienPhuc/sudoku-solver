@@ -1,116 +1,134 @@
 const initData = {
-  "1-1": 2,
-  "1-2": 4,
-  "1-3": 9,
-  "1-5": 7,
-  "1-6": 6,
-  "2-1": 8,
-  "2-2": 3,
-  "2-8": 6,
-  "2-9": 9,
-  "3-6": 9,
-  "3-7": 5,
-  "3-8": 2,
-  "4-1": 3,
-  "4-2": 6,
-  "4-4": 2,
-  "4-5": 4,
-  "4-8": 5,
-  "5-2": 9,
-  "5-5": 5,
-  "5-7": 4,
-  "5-8": 1,
-  "6-2": 5,
-  "6-3": 4,
-  "6-4": 6,
-  "6-8": 3,
-  "7-2": 1,
-  "7-3": 6,
-  "7-4": 9,
-  "7-7": 2,
-  "7-9": 8,
-  "8-3": 7,
-  "8-4": 1,
-  "8-5": 6,
-  "8-6": 8,
-  "8-9": 5,
-  "9-1": 9,
-  "9-6": 5,
-  "9-9": 1,
+  "1-4": 7,
+  "2-1": 1,
+  "3-4": 4,
+  "3-5": 3,
+  "3-7": 2,
+  "4-9": 6,
+  "5-4": 5,
+  "5-6": 9,
+  "6-7": 4,
+  "6-8": 1,
+  "6-9": 8,
+  "7-5": 8,
+  "7-6": 1,
+  "8-3": 2,
+  "8-8": 5,
+  "9-2": 4,
+  "9-7": 3,
 };
+
+const SQUARES = {
+  FIRST: ["1-1", "1-2", "1-3", "2-1", "2-2", "2-3", "3-1", "3-2", "3-3"],
+  SECOND: ["1-4", "1-5", "1-6", "2-4", "2-5", "2-6", "3-4", "3-5", "3-6"],
+  THIRD: ["1-7", "1-8", "1-9", "2-7", "2-8", "2-9", "3-7", "3-8", "3-9"],
+  FOURTH: ["4-1", "4-2", "4-3", "5-1", "5-2", "5-3", "6-1", "6-2", "6-3"],
+  FIFTH: ["4-4", "4-5", "4-6", "5-4", "5-5", "5-6", "6-4", "6-5", "6-6"],
+  SIXTH: ["4-7", "4-8", "4-9", "5-7", "5-8", "5-9", "6-7", "6-8", "6-9"],
+  SEVENTH: ["7-1", "7-2", "7-3", "8-1", "8-2", "8-3", "9-1", "9-2", "9-3"],
+  EIGHTH: ["7-4", "7-5", "7-6", "8-4", "8-5", "8-6", "9-4", "9-5", "9-6"],
+  NINTH: ["7-7", "7-8", "7-9", "8-7", "8-8", "8-9", "9-7", "9-8", "9-9"],
+};
+
+const SQUARE_KEYS = Object.keys(SQUARES);
 
 const ORIGIN = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 const popValue = (arr = [], val) => arr.filter((el) => el !== val);
 
+const getSquareItIn = (coordinate) => {
+  const squareKeys = Object.keys(SQUARES);
+  const arr = squareKeys.filter((key) => SQUARES[key].includes(coordinate));
+  return arr[0];
+};
+
 const getPossibilities = (currentData, cellRow, cellCol) => {
   let currentPossible = [...ORIGIN];
+  const coordinate = `${cellRow}-${cellCol}`;
 
   ORIGIN.map((num) => {
     const itemCoordinateInRow = `${cellRow}-${num}`;
     const itemCoordinateInColumn = `${num}-${cellCol}`;
-    if (!isNaN(currentData[itemCoordinateInRow])) {
+    if (Number.isInteger(currentData[itemCoordinateInRow])) {
       currentPossible = popValue(
         currentPossible,
         currentData[itemCoordinateInRow]
       );
     }
-    if (!isNaN(currentData[itemCoordinateInColumn])) {
+    if (Number.isInteger(currentData[itemCoordinateInColumn])) {
       currentPossible = popValue(
         currentPossible,
         currentData[itemCoordinateInColumn]
       );
     }
   });
+
+  const squareName = getSquareItIn(coordinate);
+  SQUARES[squareName].map((coor) => {
+    if (Number.isInteger(currentData[coor])) {
+      currentPossible = popValue(currentPossible, currentData[coor]);
+    }
+  });
+
+  let newPosible = [];
+  currentPossible.map((possibleValue) => {
+    let flag = true;
+    SQUARES[squareName].map((coor) => {
+      if (
+        Array.isArray(currentData[coor]) &&
+        currentData[coor].includes(possibleValue)
+      ) {
+        flag = false;
+      }
+    });
+
+    if (flag === true) {
+      newPosible.push(possibleValue);
+    }
+  });
+  console.log("new possible: ", coordinate, " -- ", newPosible);
+  // currentPossible = newPosible.length ? newPosible : currentPossible;
+
   return currentPossible;
 };
 
 const fillDomNode = (currentData) => {
-  const filledData = { ...currentData };
   const keys = Object.keys(currentData);
   keys.map((coordinate) => {
-    if (
-      !Number.isInteger(filledData[coordinate]) &&
-      filledData[coordinate].length === 1
-    ) {
-      const num = filledData[coordinate][0];
+    if (Number.isInteger(currentData[coordinate])) {
       const selector = `.dom-${coordinate}`;
-      document.querySelector(selector).innerText = num;
-      filledData[coordinate] = num;
+      document.querySelector(selector).innerText = currentData[coordinate];
     }
   });
-  return filledData;
 };
 
 const track = (currentData) => {
   console.log("Tracking ...");
-  let emptyCellCount = 0;
   let tempData = { ...currentData };
 
   ORIGIN.map((row) => {
     ORIGIN.map((col) => {
       const coordinate = `${row}-${col}`;
       if (!Number.isInteger(tempData[coordinate])) {
-        emptyCellCount += 1;
         tempData[coordinate] = getPossibilities(tempData, row, col);
       }
     });
   });
 
-  console.log("before fill data: ", tempData);
-
-  tempData = fillDomNode(tempData);
-
-  console.log("after fill data: ", tempData);
-
-  return {
-    emptyCellCount,
-    data: tempData,
-  };
+  return tempData;
 };
 
-const init = () => {
-  console.log("Init data");
+let currentData = { ...initData };
+const solveStep = () => {
+  const data = track(currentData);
+  console.log("Data after tracking: ", data);
+  fillDomNode(data);
+  currentData = data;
+};
+
+const main = () => {
+  console.log("Main context");
+
   const coordinates = Object.keys(initData);
   coordinates.map((coordinate) => {
     const selector = `.dom-${coordinate}`;
@@ -118,27 +136,10 @@ const init = () => {
     domNote.innerText = initData[coordinate];
     domNote.classList.add("default");
   });
-};
 
-const solve = () => {
-  console.time("Time Solve");
-  console.log("Solving problem ...");
-  let currentData = { ...initData };
-  let count = 0;
-  do {
-    const { emptyCellCount, data } = track(currentData);
-    count = emptyCellCount;
-    currentData = data;
-  } while (count != 0);
-  console.log("Case closed!");
-  console.timeEnd("Time Solve");
-};
-
-const main = () => {
-  console.log("Main context");
-
-  document.querySelector(".dom-btn-init").addEventListener("click", init);
-  document.querySelector(".dom-btn-solve").addEventListener("click", solve);
+  document
+    .querySelector(".dom-btn-solve-step")
+    .addEventListener("click", solveStep);
 };
 
 document.addEventListener("DOMContentLoaded", main);

@@ -1,9 +1,15 @@
+:root {
+  --white: #ffffff;
+  --black: #222222;
+  --grey: #888888;
+}
+
 * {
   box-sizing: border-box;
 }
 
 html {
-  background-color: #222222;
+  background-color: var(--black);
 }
 
 .container {
@@ -22,39 +28,39 @@ html {
 .box {
   text-align: center;
   line-height: 40px;
-  color: #888888;
+  color: var(--grey);
   width: 40px;
   height: 40px;
-  border-top: 1px solid #888888;
-  border-left: 1px solid #888888;
+  border-top: 1px solid var(--grey);
+  border-left: 1px solid var(--grey);
 }
 
 .col-1 {
-  border-left: 2px solid #ffffff;
+  border-left: 2px solid var(--white);
 }
 
 .row-1 > .box {
-  border-top: 2px solid #ffffff;
+  border-top: 2px solid var(--white);
 }
 
 .row-4 > .box,
 .row-7 > .box {
-  border-top: 2px solid #ffffff;
+  border-top: 2px solid var(--white);
 }
 
 .col-4,
 .col-7 {
-  border-left: 2px solid #ffffff;
+  border-left: 2px solid var(--white);
 }
 
 .col-9 {
-  border-right: 2px solid #ffffff;
+  border-right: 2px solid var(--white);
 }
 
 .row-9 > .box {
-  border-bottom: 2px solid #ffffff;
+  border-bottom: 2px solid var(--white);
 }
 
 .default {
-  color: #ffffff;
+  color: var(--white);
 }
