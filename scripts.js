@@ -1,4 +1,4 @@
-const initData = {
+const INIT_DATA = {
   "1-4": 7,
   "2-1": 1,
   "3-4": 4,
@@ -34,6 +34,9 @@ const SQUARE_KEYS = Object.keys(SQUARES);
 
 const ORIGIN = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
+const LENGTH = ORIGIN.length;
+
+// ----------------------------------------------------------------------------
 const popValue = (arr = [], val) => arr.filter((el) => el !== val);
 
 const getSquareItIn = (coordinate) => {
@@ -42,98 +45,141 @@ const getSquareItIn = (coordinate) => {
   return arr[0];
 };
 
-const getPossibilities = (currentData, cellRow, cellCol) => {
-  let currentPossible = [...ORIGIN];
-  const coordinate = `${cellRow}-${cellCol}`;
+const isNumber = (val) => Number.isInteger(val);
 
-  ORIGIN.map((num) => {
-    const itemCoordinateInRow = `${cellRow}-${num}`;
-    const itemCoordinateInColumn = `${num}-${cellCol}`;
-    if (Number.isInteger(currentData[itemCoordinateInRow])) {
+const isArray = (val) => Array.isArray(val);
+
+// ----------------------------------------------------------------------------
+
+const getPossibilities = (currentData, cellRow, cellCol) => {
+  const coordinate = `${cellRow}-${cellCol}`;
+  let currentPossible = [...ORIGIN];
+
+  for (let axis = 1; axis <= LENGTH; axis++) {
+    const itemCoordinateInRow = `${cellRow}-${axis}`;
+    const itemCoordinateInColumn = `${axis}-${cellCol}`;
+
+    if (isNumber(currentData[itemCoordinateInRow])) {
       currentPossible = popValue(
         currentPossible,
         currentData[itemCoordinateInRow]
       );
     }
-    if (Number.isInteger(currentData[itemCoordinateInColumn])) {
+
+    if (isNumber(currentData[itemCoordinateInColumn])) {
       currentPossible = popValue(
         currentPossible,
         currentData[itemCoordinateInColumn]
       );
     }
-  });
+  }
 
   const squareName = getSquareItIn(coordinate);
-  SQUARES[squareName].map((coor) => {
+  const squareCoordinates = SQUARES[squareName];
+
+  squareCoordinates.map((coor) => {
     if (Number.isInteger(currentData[coor])) {
       currentPossible = popValue(currentPossible, currentData[coor]);
     }
   });
 
-  let newPosible = [];
-  currentPossible.map((possibleValue) => {
-    let flag = true;
-    SQUARES[squareName].map((coor) => {
-      if (
-        Array.isArray(currentData[coor]) &&
-        currentData[coor].includes(possibleValue)
-      ) {
-        flag = false;
-      }
-    });
-
-    if (flag === true) {
-      newPosible.push(possibleValue);
-    }
-  });
-  console.log("new possible: ", coordinate, " -- ", newPosible);
-  // currentPossible = newPosible.length ? newPosible : currentPossible;
-
-  return currentPossible;
+  return currentPossible.length === 1 ? currentPossible[0] : currentPossible;
 };
 
-const fillDomNode = (currentData) => {
-  const keys = Object.keys(currentData);
-  keys.map((coordinate) => {
-    if (Number.isInteger(currentData[coordinate])) {
+const guess = (currentData) => {
+  let tempData = { ...currentData };
+
+  for (let row = 1; row <= LENGTH; row++) {
+    for (let col = 1; col <= LENGTH; col++) {
+      const trackCellCoordinate = `${row}-${col}`;
+      const squareName = getSquareItIn(trackCellCoordinate);
+      const squareCoordinates = SQUARES[squareName];
+
+      if (isNumber(tempData[trackCellCoordinate])) {
+        continue;
+      }
+
+      let newPosible = [];
+      tempData[trackCellCoordinate].map((possibleValue) => {
+        let count = 0;
+
+        squareCoordinates.map((coor) => {
+          if (
+            isArray(tempData[coor]) &&
+            tempData[coor].includes(possibleValue)
+          ) {
+            count++;
+          }
+        });
+
+        if (count === 1) {
+          newPosible.push(possibleValue);
+        }
+      });
+
+      const arr = newPosible.length
+        ? newPosible
+        : tempData[trackCellCoordinate];
+
+      tempData[trackCellCoordinate] = arr.length === 1 ? arr[0] : arr;
+    }
+  }
+
+  return tempData;
+};
+
+const fillResult = (currentData) => {
+  for (let row = 1; row <= LENGTH; row++) {
+    for (let col = 1; col <= LENGTH; col++) {
+      const coordinate = `${row}-${col}`;
+
+      if (!isNumber(currentData[coordinate])) {
+        continue;
+      }
+
       const selector = `.dom-${coordinate}`;
       document.querySelector(selector).innerText = currentData[coordinate];
     }
-  });
+  }
 };
 
 const track = (currentData) => {
   console.log("Tracking ...");
   let tempData = { ...currentData };
 
-  ORIGIN.map((row) => {
-    ORIGIN.map((col) => {
-      const coordinate = `${row}-${col}`;
-      if (!Number.isInteger(tempData[coordinate])) {
-        tempData[coordinate] = getPossibilities(tempData, row, col);
+  for (let row = 1; row <= LENGTH; row++) {
+    for (let col = 1; col <= LENGTH; col++) {
+      const trackCellCoordinate = `${row}-${col}`;
+
+      if (isNumber(tempData[trackCellCoordinate])) {
+        continue;
       }
-    });
-  });
+
+      tempData[trackCellCoordinate] = getPossibilities(tempData, row, col);
+    }
+  }
 
   return tempData;
 };
 
-let currentData = { ...initData };
+let currentData = { ...INIT_DATA };
 const solveStep = () => {
-  const data = track(currentData);
-  console.log("Data after tracking: ", data);
-  fillDomNode(data);
+  console.log("Before: ", currentData);
+  let data = track(currentData);
+  data = guess(data);
+  console.log("After: ", data);
+  fillResult(data);
   currentData = data;
 };
 
 const main = () => {
   console.log("Main context");
 
-  const coordinates = Object.keys(initData);
+  const coordinates = Object.keys(INIT_DATA);
   coordinates.map((coordinate) => {
     const selector = `.dom-${coordinate}`;
     const domNote = document.querySelector(selector);
-    domNote.innerText = initData[coordinate];
+    domNote.innerText = INIT_DATA[coordinate];
     domNote.classList.add("default");
   });
 

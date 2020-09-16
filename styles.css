@@ -36,31 +36,31 @@ html {
 }
 
 .col-1 {
-  border-left: 2px solid var(--white);
+  border-left: 2px solid var(--grey);
 }
 
 .row-1 > .box {
-  border-top: 2px solid var(--white);
+  border-top: 2px solid var(--grey);
 }
 
 .row-4 > .box,
 .row-7 > .box {
-  border-top: 2px solid var(--white);
+  border-top: 2px solid var(--grey);
 }
 
 .col-4,
 .col-7 {
-  border-left: 2px solid var(--white);
+  border-left: 2px solid var(--grey);
 }
 
 .col-9 {
-  border-right: 2px solid var(--white);
+  border-right: 2px solid var(--grey);
 }
 
 .row-9 > .box {
-  border-bottom: 2px solid var(--white);
+  border-bottom: 2px solid var(--grey);
 }
 
 .default {
-  color: var(--white);
+  color: #c5cbce;
 }
