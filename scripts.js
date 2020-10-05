@@ -49,24 +49,33 @@ const isNumber = (val) => Number.isInteger(val);
 
 const isArray = (val) => Array.isArray(val);
 
+const getDifference = (array1, array2) =>
+  array1.filter((x) => !array2.includes(x));
+
 // ----------------------------------------------------------------------------
 
 const getPossibilities = (currentData, cellRow, cellCol) => {
   const coordinate = `${cellRow}-${cellCol}`;
-  let currentPossible = [...ORIGIN];
+  let currentPossible = [...currentData[coordinate]];
 
   for (let axis = 1; axis <= LENGTH; axis++) {
     const itemCoordinateInRow = `${cellRow}-${axis}`;
     const itemCoordinateInColumn = `${axis}-${cellCol}`;
 
-    if (isNumber(currentData[itemCoordinateInRow])) {
+    if (
+      itemCoordinateInRow !== coordinate &&
+      isNumber(currentData[itemCoordinateInRow])
+    ) {
       currentPossible = popValue(
         currentPossible,
         currentData[itemCoordinateInRow]
       );
     }
 
-    if (isNumber(currentData[itemCoordinateInColumn])) {
+    if (
+      itemCoordinateInColumn !== coordinate &&
+      isNumber(currentData[itemCoordinateInColumn])
+    ) {
       currentPossible = popValue(
         currentPossible,
         currentData[itemCoordinateInColumn]
@@ -78,7 +87,7 @@ const getPossibilities = (currentData, cellRow, cellCol) => {
   const squareCoordinates = SQUARES[squareName];
 
   squareCoordinates.map((coor) => {
-    if (Number.isInteger(currentData[coor])) {
+    if (isNumber(currentData[coor])) {
       currentPossible = popValue(currentPossible, currentData[coor]);
     }
   });
@@ -95,33 +104,38 @@ const guess = (currentData) => {
       const squareName = getSquareItIn(trackCellCoordinate);
       const squareCoordinates = SQUARES[squareName];
 
-      if (isNumber(tempData[trackCellCoordinate])) {
+      if (trackCellCoordinate === "2-6") {
+        // console.log("predict: ", newPossible);
+        // console.log("current data: ", currentData["2-6"]);
+      }
+
+      if (isNumber(currentData[trackCellCoordinate])) {
         continue;
       }
 
-      let newPosible = [];
-      tempData[trackCellCoordinate].map((possibleValue) => {
-        let count = 0;
-
-        squareCoordinates.map((coor) => {
-          if (
-            isArray(tempData[coor]) &&
-            tempData[coor].includes(possibleValue)
-          ) {
-            count++;
-          }
-        });
-
-        if (count === 1) {
-          newPosible.push(possibleValue);
+      let newPossible = currentData[trackCellCoordinate];
+      squareCoordinates.map((coor) => {
+        if (coor !== trackCellCoordinate && isArray(currentData[coor])) {
+          newPossible = getDifference(newPossible, currentData[coor]);
         }
       });
 
-      const arr = newPosible.length
-        ? newPosible
-        : tempData[trackCellCoordinate];
+      // if (trackCellCoordinate === "1-6") {
+      //   console.log(
+      //     `Square ${squareName} - Possibilities of ${trackCellCoordinate} -- ${newPossible}`
+      //   );
+      // }
 
-      tempData[trackCellCoordinate] = arr.length === 1 ? arr[0] : arr;
+      // if (trackCellCoordinate === "2-6") {
+      //   console.log(
+      //     `Square ${squareName} - Possibilities of ${trackCellCoordinate} -- ${newPossible}`
+      //   );
+      // }
+
+      tempData[trackCellCoordinate] =
+        newPossible.length === 1
+          ? newPossible[0]
+          : currentData[trackCellCoordinate];
     }
   }
 
@@ -133,12 +147,20 @@ const fillResult = (currentData) => {
     for (let col = 1; col <= LENGTH; col++) {
       const coordinate = `${row}-${col}`;
 
+      if (coordinate === "2-6") {
+        // console.log("predict: ", newPossible);
+        // console.log("filling: ", currentData[coordinate]);
+      }
+
       if (!isNumber(currentData[coordinate])) {
         continue;
       }
 
       const selector = `.dom-${coordinate}`;
-      document.querySelector(selector).innerText = currentData[coordinate];
+
+      if (!document.querySelector(selector).innerText) {
+        document.querySelector(selector).innerText = currentData[coordinate];
+      }
     }
   }
 };
@@ -155,21 +177,36 @@ const track = (currentData) => {
         continue;
       }
 
-      tempData[trackCellCoordinate] = getPossibilities(tempData, row, col);
+      tempData[trackCellCoordinate] = getPossibilities(currentData, row, col);
+      if (trackCellCoordinate === "2-6") {
+        // console.log("Co le nao ...: ", tempData[trackCellCoordinate]);
+      }
     }
   }
 
   return tempData;
 };
 
-let currentData = { ...INIT_DATA };
+const init = (initData) => {
+  const temp = { ...initData };
+  for (let row = 1; row <= LENGTH; row++) {
+    for (let col = 1; col <= LENGTH; col++) {
+      const coordinate = `${row}-${col}`;
+      temp[coordinate] = initData[coordinate] || [...ORIGIN];
+    }
+  }
+  return temp;
+};
+
+let currentData = init(INIT_DATA);
+
 const solveStep = () => {
   console.log("Before: ", currentData);
   let data = track(currentData);
   data = guess(data);
   console.log("After: ", data);
   fillResult(data);
-  currentData = data;
+  currentData = { ...data };
 };
 
 const main = () => {
