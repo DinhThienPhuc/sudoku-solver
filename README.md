@@ -1,1 +1,7 @@
-# sudoku-solver
+### Sudoku solver
+
+Sudoku is a puzzle that has enjoyed worldwide popularity since 2005. To solve a Sudoku puzzle, one needs to use a combination of logic and trial-and-error. More math is involved behind the scenes: combinatorics used in counting valid Sudoku grids, group theory used to describe ideas of when two grids are equivalent, and computational complexity with regards to solving Sudokus.
+
+The game in its current form was invented by American Howard Garns in 1979 and published by Dell Magazines as "Numbers in Place." In 1984, Maki Kaji of Japan published it in the magazine of his puzzle company Nikoli. He gave the game its modern name of Sudoku, which means "Single Numbers." The puzzle became popular in Japan and was discovered there by New Zealander Wayne Gould, who then wrote a computer program that would generate Sudokus. He was able to get some puzzles printed in the London newspaper The Times beginning in 2004. Soon after, Sudoku-fever swept England. The puzzle finally became popular in the U.S. in 2005. It has become a regular feature in many newspapers and magazines and is enjoyed by people all over the globe.
+
+The standard version of Sudoku consists of a 9×9 square grid containing 81 cells. The grid is subdivided into nine 3×3 blocks. Some of the 81 cells are filled in with numbers from the set {1,2,3,4,5,6,7,8,9}. These filled-in cells are called givens. The goal is to fill in the whole grid using the nine digits so that each row, each column, and each block contains each number exactly once. We call this constraint on the rows, columns, and blocks the One Rule.
